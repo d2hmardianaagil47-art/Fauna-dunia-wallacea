@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ekspedisi Wallace: Game Persebaran Fauna Dunia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9f0ee;--card:#fff;--ink:#14303c;--muted:#51707b;--line:#c5d6d2;--deep:#0f3646;--on:#eaf6f3;--ok:#1f8a5b;--okbg:#e2f4ea;--bad:#c2453d;--badbg:#fbe9e7;--gold:#f0b429;--sea:#d3e5ec;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0b1d25;--card:#13303c;--ink:#e6f2ef;--muted:#9bb7bf;--line:#26485a;--deep:#07151b;--okbg:#12392b;--badbg:#411f1d;--sea:#0a2a38}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0b1d25;--card:#13303c;--ink:#e6f2ef;--muted:#9bb7bf;--line:#26485a;--deep:#07151b;--okbg:#12392b;--badbg:#411f1d;--sea:#0a2a38}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Figtree,system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--deep);z-index:10}
+header{background:var(--deep);color:var(--on);padding:18px 18px 14px}
+header div,main{max-width:720px;margin:0 auto}
+h1{font:800 clamp(26px,7vw,36px)/1.05 "Bricolage Grotesque",Figtree,sans-serif;margin:0 0 4px}
+header p{margin:0;color:#a9cfd0;font-size:14px}
+main{padding:14px 14px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+h2{font:800 20px/1.2 "Bricolage Grotesque",Figtree,sans-serif;margin:0 0 8px}
+svg.map{width:100%;height:auto;display:block;background:var(--sea);border-radius:10px}
+.map polygon{stroke:#fff;stroke-width:.8;transition:opacity .3s;cursor:pointer}
+.map polygon.good{stroke:#14303c;stroke-width:2;animation:pulse .6s 3}
+.map text{font:600 7px Figtree,sans-serif;fill:#fff;paint-order:stroke;stroke:rgba(0,0,0,.45);stroke-width:1.4px;text-anchor:middle;pointer-events:none}
+.leg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 0;padding:0;list-style:none;font-size:14px}
+.leg li{display:flex;gap:8px;align-items:flex-start}
+.leg i{flex:none;width:14px;height:14px;border-radius:4px;margin-top:4px}
+.leg span{display:block;color:var(--muted);font-size:13px}
+.btn{font:600 16px Figtree,sans-serif;border:0;border-radius:10px;padding:13px 20px;background:var(--deep);color:var(--on);cursor:pointer;width:100%;margin-top:12px}
+.btn.alt{background:var(--line);color:var(--ink)}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.hud{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;margin-bottom:8px;gap:8px}
+.hud b{background:var(--gold);color:#3a2a00;padding:2px 12px;border-radius:99px}
+.prog,.tm,.hp{height:9px;background:var(--line);border-radius:9px;overflow:hidden;margin-bottom:10px}
+.prog div,.hp div{height:100%;background:var(--ok);transition:width .4s}
+.hp div{background:var(--bad)}
+.tm div{height:100%;width:100%;background:var(--ok);transition:width .1s linear,background .3s}
+.an{text-align:center}
+.em{font-size:clamp(60px,20vw,96px);line-height:1.1;margin:6px 0;animation:pop .5s}
+.an h2{font-size:24px;margin:0}
+.cb{display:inline-block;background:var(--deep);color:var(--on);padding:2px 12px;border-radius:99px;font-size:13px;font-weight:600}
+.q{font-size:17px;font-weight:600;margin:6px 0 12px}
+.rb{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.rb button{font:600 15px Figtree,sans-serif;color:#0b1d25;border:3px solid transparent;border-radius:10px;padding:12px 6px;cursor:pointer}
+.rb button:disabled{opacity:.55;cursor:default}
+.rb button.good{opacity:1;border-color:var(--ok);box-shadow:0 0 0 3px var(--okbg)}
+.rb button.bad{opacity:1;border-color:var(--bad)}
+.bs{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.bs .em{font-size:60px;margin:0}
+.bs>div:last-child{flex:1}
+.opt{display:block;width:100%;text-align:left;font:400 16px/1.4 Figtree,sans-serif;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:10px;padding:11px 14px;margin-bottom:8px;cursor:pointer}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}
+.opt.bad{border-color:var(--bad);background:var(--badbg)}
+.fb{border-radius:12px;padding:12px 14px;margin-top:12px;text-align:left}
+.fb.ok{background:var(--okbg)}.fb.bad{background:var(--badbg)}
+.fb p{margin:6px 0 4px}
+.big{font:800 54px/1 "Bricolage Grotesque",Figtree,sans-serif;text-align:center;margin:6px 0}
+.rank{text-align:center;font-weight:600;color:var(--muted);margin:0 0 12px}
+.st{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;margin:10px 0}
+.st div{background:var(--sea);border-radius:10px;padding:8px 4px;font-size:13px}
+.st b{display:block;font-size:20px}
+.wl{margin:8px 0 0;font-size:13px;color:var(--muted)}
+.conf{position:fixed;top:-40px;font-size:26px;z-index:20;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+@keyframes pop{0%{transform:scale(.3) rotate(-12deg);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+@keyframes pulse{50%{opacity:.45}}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.shake{animation:shake .4s}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header><div>
+<h1>Ekspedisi Wallace</h1>
+<p>Game petualangan fauna dunia, Geografi kelas XI</p>
+</div></header>
+<main id="app"></main>
+<script>
+var R={pa:["Paleartik","#7f8fe0","Eropa, Asia utara dan tengah, Afrika Utara","🐪"],ne:["Nearktik","#3fa7a8","Amerika Utara hingga Meksiko utara","🦬"],nt:["Neotropikal","#6fae4a","Amerika Tengah dan Selatan","🦥"],et:["Ethiopia","#e3a02e","Afrika di selatan Gurun Sahara","🦁"],or:["Oriental","#dc5f4b","Asia Selatan, Asia Tenggara, Indonesia barat","🐅"],au:["Australia","#b266c9","Australia, Papua, Tasmania, pulau sekitarnya","🦘"]};
+var P={ne:"15,30 70,15 120,15 150,28 130,45 115,58 98,66 85,62 60,50 30,40",nt:"85,66 100,66 115,75 125,88 118,100 105,115 100,135 95,150 88,125 80,105 75,85 80,72",pa:"170,40 180,25 220,15 290,15 340,25 335,45 300,55 270,60 250,70 215,72 190,62 175,55",et:"168,78 195,72 215,82 225,95 215,115 205,130 195,135 185,120 178,100",or:"240,72 260,65 285,66 298,74 300,88 296,99 285,95 270,95 255,90 245,82",au:"300,86 312,86 326,98 322,104 335,108 340,122 328,136 310,140 298,128 296,112 297,100"};
+var T={pa:[250,42],ne:[90,40],nt:[96,104],et:[196,102],or:[268,82],au:[320,124]};
+var A=[["Harimau","🐅","or","Harimau hidup di hutan Asia, termasuk Sumatra. Kerabatnya di Jawa dan Bali sudah punah."],["Gajah Asia","🐘","or","Gajah Asia berkuping lebih kecil daripada gajah Afrika dan hidup di Asia Selatan dan Tenggara."],["Orangutan","🦧","or","Orangutan hanya ada di Sumatra dan Kalimantan, bagian barat Garis Wallace."],["Burung Merak","🦚","or","Merak hijau hidup di Asia Tenggara, termasuk Jawa."],["Kanguru","🦘","au","Kanguru adalah marsupialia khas Australia dan Papua."],["Koala","🐨","au","Koala hanya hidup di Australia dan makan daun eukaliptus."],["Cendrawasih","🐦","au","Cendrawasih, burung surga, endemik Papua dan pulau sekitarnya."],["Kasuari","🦤","au","Kasuari hidup di Papua dan Australia utara, jauh di timur Garis Wallace."],["Singa","🦁","et","Singa Afrika berburu di sabana selatan Gurun Sahara."],["Jerapah","🦒","et","Jerapah mengunyah daun akasia di sabana Afrika."],["Zebra","🦓","et","Zebra liar hidup di padang rumput Afrika timur dan selatan."],["Gorila","🦍","et","Gorila tinggal di hutan hujan Afrika tengah."],["Kuda Nil","🦛","et","Kuda nil berendam di sungai dan danau Afrika."],["Llama","🦙","nt","Llama dijinakkan di Pegunungan Andes, Amerika Selatan."],["Kungkang","🦥","nt","Kungkang bergerak lambat di hutan hujan Amerika Tengah dan Selatan."],["Jaguar","🐆","nt","Jaguar adalah kucing besar Amerika Selatan dan Tengah."],["Anakonda","🐍","nt","Anakonda hidup di rawa dan sungai Amazon."],["Bison","🦬","ne","Bison Amerika berkeliaran di padang rumput Amerika Utara."],["Beruang Grizzly","🐻","ne","Grizzly hidup di pegunungan Amerika Utara bagian barat."],["Rakun","🦝","ne","Rakun asli Amerika Utara dan terkenal pandai membuka wadah."],["Elang Botak","🦅","ne","Elang botak adalah lambang Amerika Serikat dan hidup di Amerika Utara."],["Unta Baktria","🐪","pa","Unta berpunuk dua hidup di gurun dingin Asia Tengah."],["Yak","🐂","pa","Yak beradaptasi dengan dataran tinggi dingin Tibet dan Asia Tengah."],["Landak Eropa","🦔","pa","Landak ini hidup di hutan dan taman Eropa."]];
+var B=[{t:"Perhatikan peta. Garis putus-putus adalah Garis Wallace. Garis ini memisahkan fauna…",o:["Oriental (barat) dan Australia (timur)","Nearktik (utara) dan Neotropikal (selatan)","Ethiopia (barat) dan Oriental (timur)","Paleartik (utara) dan Australia (selatan)"],x:"Garis Wallace melewati Selat Lombok dan Selat Makassar. Sisi barat berfauna Asia (Oriental), sisi timur berfauna Australia."},
+{t:"Kakatua hidup di Lombok tetapi tidak di Bali yang hanya dipisah selat sekitar 35 km. Penyebab utamanya…",o:["Selat Lombok sangat dalam sehingga Bali dan Lombok tidak pernah tersambung daratan","Iklim Bali jauh lebih dingin daripada Lombok","Bali termasuk Paparan Sahul seperti Papua","Kakatua hanya hidup di pulau tanpa manusia"],x:"Saat zaman es Bali tersambung ke Paparan Sunda sehingga hewan Asia dapat menyeberang. Lombok dipisah palung dalam, jadi faunanya bercorak Australia."},
+{t:"Anoa, babirusa, dan tarsius hidup di Sulawesi. Zona peralihan antara Garis Wallace dan Garis Weber disebut…",o:["Wallacea","Paparan Sunda","Paparan Sahul","Beringia"],x:"Wallacea meliputi Sulawesi, Maluku, dan Nusa Tenggara. Pulau-pulau ini tak pernah tersambung ke Asia maupun Australia, sehingga banyak spesies endemik."},
+{t:"Mengapa Australia memiliki banyak mamalia berkantung yang jarang ada di benua lain?",o:["Benua terisolasi sangat lama sehingga marsupialia berkembang tanpa pesaing mamalia plasenta","Australia tersambung langsung dengan Asia lewat Paparan Sunda","Iklim Australia sama dengan iklim kutub","Marsupialia dibawa manusia dari Afrika"],x:"Isolasi geografis puluhan juta tahun membuat marsupialia berevolusi menjadi beragam jenis tanpa persaingan mamalia plasenta."}];
+var app=document.getElementById("app"),st,tm,best=0,mute=false,ac;
+try{best=+localStorage.getItem("wl_best")||0}catch(e){}
+function $(s){return document.querySelector(s)}
+function $$(s){return document.querySelectorAll(s)}
+function sh(a){for(var j=a.length-1;j>0;j--){var k=Math.floor(Math.random()*(j+1)),t=a[j];a[j]=a[k];a[k]=t}return a}
+function beep(f,d,tp){if(mute)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();var o=ac.createOscillator(),g=ac.createGain();o.type=tp||"sine";o.frequency.value=f;g.gain.value=.07;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch(e){}}
+function confetti(){if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;var e=["🎉","⭐","🦜","🐅","🦘","✨"];for(var i=0;i<36;i++){var s=document.createElement("span");s.className="conf";s.textContent=e[i%6];s.style.left=Math.random()*100+"vw";s.style.animationDuration=2+Math.random()*2+"s";s.style.animationDelay=Math.random()*.8+"s";document.body.appendChild(s);setTimeout(function(n){n.remove()}.bind(null,s),5000)}}
+function map(wl){var s='<svg class="map" viewBox="0 0 360 160" role="img" aria-label="Peta dunia sederhana per wilayah fauna">';for(var k in P)s+='<polygon data-r="'+k+'" points="'+P[k]+'" fill="'+R[k][1]+'"/>';for(k in T)s+='<text x="'+T[k][0]+'" y="'+T[k][1]+'">'+R[k][0]+'</text>';if(wl)s+='<polyline points="296,108 296,99 298,92 302,86 306,80" fill="none" stroke="#fff" stroke-width="2.2" stroke-dasharray="3 2"/><polyline points="296,108 296,99 298,92 302,86 306,80" fill="none" stroke="#c2453d" stroke-width="1.2" stroke-dasharray="3 2"/>';return s+'</svg>'+(wl?'<p class="wl">Garis putus-putus merah: Garis Wallace (peta disederhanakan).</p>':'')}
+function hud(){return'<div class="hud"><span aria-label="Nyawa">'+"❤️".repeat(Math.max(0,st.lives))+"🖤".repeat(3-Math.max(0,st.lives))+'</span><span>'+(st.sg==1?"Level 1 · Peta Fauna":"Level 2 · Bos Wallacea")+'</span><b>⭐ '+st.score+'</b></div>'}
+function home(){clearInterval(tm);var l="";for(var k in R)l+='<li><i style="background:'+R[k][1]+'"></i><div>'+R[k][3]+' <b>'+R[k][0]+'</b><span>'+R[k][2]+'</span></div></li>';
+app.innerHTML='<section class="card"><h2>Enam wilayah fauna dunia</h2><p>Pada 1876, Alfred Russel Wallace membagi dunia menjadi enam wilayah zoogeografi. Kini kamu jadi penjelajahnya!</p>'+map(1)+'<ul class="leg">'+l+'</ul></section><section class="card"><h2>Misi ekspedisi</h2><p><b>Level 1:</b> 12 hewan muncul satu per satu. Ketuk wilayah asalnya di peta sebelum waktu habis. Jawaban benar beruntun menaikkan kombo hingga x5.</p><p><b>Level 2:</b> Hadapi Penjaga Wallacea, bos dengan 4 soal sulit. Kamu punya 3 nyawa, jaga baik-baik!</p><p>🏆 Rekor: <b>'+best+'</b></p><button class="btn" id="go">Mulai ekspedisi</button><button class="btn alt" id="sd">'+(mute?"🔇 Suara: mati":"🔊 Suara: hidup")+'</button></section>';
+$("#go").onclick=start;$("#sd").onclick=function(){mute=!mute;this.textContent=mute?"🔇 Suara: mati":"🔊 Suara: hidup";beep(520,.1)};window.scrollTo(0,0)}
+function start(){st={sg:1,score:0,lives:3,combo:0,mx:0,i:0,list:sh(A.slice()).slice(0,12),miss:[],bq:sh(B.slice()),bi:0,hit:0,ok:0};beep(440,.1);beep(660,.15);animal()}
+function timer(ms,fn){st.t0=Date.now();st.d=ms;st.open=1;clearInterval(tm);tm=setInterval(function(){var f=1-(Date.now()-st.t0)/st.d,b=$("#tb");if(b){b.style.width=Math.max(0,f*100)+"%";b.style.background=f<.3?"var(--bad)":f<.6?"var(--gold)":"var(--ok)"}if(f<=0)fn(null)},100)}
+function left(){return Math.max(0,st.d-(Date.now()-st.t0))/1000}
+function animal(){var a=st.list[st.i],rb="";for(var k in R)rb+='<button data-r="'+k+'" style="background:'+R[k][1]+'">'+R[k][3]+" "+R[k][0]+"</button>";
+app.innerHTML=hud()+'<div class="prog"><div style="width:'+st.i/12*100+'%"></div></div><div class="tm"><div id="tb"></div></div><article class="card an"><span class="cb">'+(st.combo>1?"🔥 Kombo x"+Math.min(st.combo,5):"Kombo x1")+'</span><div class="em" aria-hidden="true">'+a[1]+'</div><h2>'+a[0]+'</h2><p class="q">Di wilayah mana hewan ini hidup alami?</p>'+map()+'<div class="rb">'+rb+'</div><div id="fb"></div></article>';
+$$(".map polygon,.rb button").forEach(function(e){e.onclick=function(){pick(e.dataset.r)}});timer(Math.max(7,10-Math.floor(st.i/3))*1000,pick);window.scrollTo(0,0)}
+function next(label,fn){return'<button class="btn" id="nx">'+label+"</button>"}
+function pick(r){if(!st.open)return;st.open=0;clearInterval(tm);var a=st.list[st.i],ok=r===a[2],g=0,lf=left();
+if(ok){st.combo++;st.mx=Math.max(st.mx,st.combo);st.ok++;g=10*Math.min(st.combo,5)+Math.ceil(lf);st.score+=g;beep(660,.1);setTimeout(function(){beep(880,.18)},100)}else{st.combo=0;st.lives--;st.miss.push(a);beep(170,.4,"sawtooth");app.classList.add("shake");setTimeout(function(){app.classList.remove("shake")},400)}
+$$(".map polygon").forEach(function(p){p.style.opacity=p.dataset.r===a[2]?1:.25;if(p.dataset.r===a[2])p.classList.add("good")});
+$$(".rb button").forEach(function(b){b.disabled=true;if(b.dataset.r===a[2])b.classList.add("good");else if(b.dataset.r===r)b.classList.add("bad")});
+$(".hud").outerHTML=hud();var over=st.lives<=0,last=st.i===11;
+$("#fb").innerHTML='<div class="fb '+(ok?"ok":"bad")+'"><b>'+(ok?"Benar! +"+g+" poin":r?"Salah, itu bukan wilayahnya. Nyawa berkurang.":"Waktu habis! Nyawa berkurang.")+"</b><p>"+a[1]+" "+a[0]+" ada di wilayah <b>"+R[a[2]][0]+"</b>. "+a[3]+"</p></div>"+next(over?"Lihat hasil":last?"Lawan bos Wallacea ⚔️":"Hewan berikutnya");
+$("#nx").onclick=function(){if(over)end(0);else if(last){st.sg=2;if(st.lives<3)st.lives++;boss()}else{st.i++;animal()}};$("#fb").scrollIntoView({behavior:"smooth",block:"nearest"})}
+function bossBar(){return(4-st.hit)/4*100}
+function boss(){var q=st.bq[st.bi],o=sh(q.o.map(function(t,k){return{t:t,ok:!k}}));
+var h=hud()+'<div class="tm"><div id="tb"></div></div><article class="card"><div class="bs"><div class="em" id="bm">🐉</div><div><b>Penjaga Wallacea</b> · soal '+(st.bi+1)+" dari 4<div class=\"hp\"><div style=\"width:"+bossBar()+'%"></div></div></div></div><p class="q">'+q.t+"</p>"+map(1)+'<div style="margin-top:12px">';
+o.forEach(function(x,k){h+='<button class="opt" data-k="'+k+'">'+x.t+"</button>"});app.innerHTML=h+'</div><div id="fb"></div></article>';
+function ans(b){if(!st.open)return;st.open=0;clearInterval(tm);var x=b?o[b.dataset.k]:{ok:false},g=0;
+$$(".opt").forEach(function(c){c.disabled=true;if(o[c.dataset.k].ok)c.classList.add("ok")});
+if(x.ok){st.hit++;st.ok++;g=25+Math.ceil(left());st.score+=g;beep(520,.1);setTimeout(function(){beep(780,.2)},100);$(".hp div").style.width=bossBar()+"%";$("#bm").classList.add("shake")}else{st.lives--;beep(170,.4,"sawtooth");if(b)b.classList.add("bad");$("#bm").textContent="😈"}
+$(".hud").outerHTML=hud();var over=st.lives<=0,last=st.bi===3;
+$("#fb").innerHTML='<div class="fb '+(x.ok?"ok":"bad")+'"><b>'+(x.ok?"Serangan kena! +"+g+" poin":b?"Serangan meleset. Nyawa berkurang.":"Waktu habis! Nyawa berkurang.")+"</b><p>"+q.x+"</p></div>"+next(over||last?"Lihat hasil":"Soal berikutnya");
+$("#nx").onclick=function(){if(over||last)end(!over);else{st.bi++;boss()}};$("#fb").scrollIntoView({behavior:"smooth",block:"nearest"})}
+$$(".opt").forEach(function(b){b.onclick=function(){ans(b)}});timer(18000,ans);window.scrollTo(0,0)}
+function end(win){clearInterval(tm);var s=st.score,r=s>=550?["🏅","Penjelajah Wallace"]:s>=380?["🧭","Naturalis Muda"]:s>=220?["🔭","Pemandu Lapangan"]:["🌱","Calon Penjelajah"],nr=s>best;
+if(nr){best=s;try{localStorage.setItem("wl_best",s)}catch(e){}}
+var h='<section class="card"><div class="em">'+(win&&st.hit==4?"🏆":win?r[0]:"💀")+'</div><h2 style="text-align:center">'+(win?"Ekspedisi berhasil!":"Ekspedisi terhenti")+'</h2><div class="big">'+s+'</div><p class="rank">Peringkat: '+r[1]+(nr?" · 🎉 Rekor baru!":"")+'</p><div class="st"><div><b>'+st.ok+'</b>jawaban benar</div><div><b>x'+Math.min(st.mx,5)+'</b>kombo terbaik</div><div><b>'+Math.max(0,st.lives)+'</b>nyawa sisa</div></div>';
+if(st.miss.length){h+="<h2>Perlu dipelajari lagi</h2>";st.miss.forEach(function(a){h+="<p>"+a[1]+" <b>"+a[0]+"</b>: "+R[a[2]][0]+"</p>"})}
+app.innerHTML=h+'<button class="btn" id="re">Main lagi</button><button class="btn alt" id="mn">Menu utama</button></section>';
+$("#re").onclick=start;$("#mn").onclick=home;if(win){confetti();beep(523,.15);setTimeout(function(){beep(659,.15)},150);setTimeout(function(){beep(784,.3)},300)}window.scrollTo(0,0)}
+home();
+</script>
+</body>
+</html>
